@@ -126,7 +126,7 @@ public class Scan {
                 String identy = strs[1]; //在那个域的变量名称
                 if(!identy.equals("无")){  //需要返回值
                     String str = line.split(" ")[1].replace(";","");//取字符
-                    Object res = to.value(str,zone[where(i)]); //取值
+                    Object res = to.value(str,zone[where(i)]).toString(); //取值
                     zone[zoneID].put(identy,res);
 
                     System.out.println("返回"+identy+" ="+res);
@@ -135,6 +135,7 @@ public class Scan {
                 i = Integer.parseInt(strs[0]); //回到调用处。由于+1 到下一行
             }
             else if(isFuncUse(i)!= -1){  //函数调用
+                System.out.print(line+" //");
                 if(line.contains("=")){
                     String left = line.split("=")[0];
                     String define = left.split(" ")[0]; //类型
@@ -172,9 +173,36 @@ public class Scan {
 //                    System.out.print(can+"传入");
 //                }
             }
-            else if(line.contains("int") && !funcIndex.contains(i)){
-               String[] lr = line.split("=");
+            else if(line.contains("int") && !funcIndex.contains(i)){ //声明变量并赋值
+                System.out.print(line+" ");
+                String[] lr = line.split("=");
+                String l = lr[0];
+                String r = lr[1].replace(" ", "").replace(";", "");
+                String[] ls = l.split(" ");
+                String id = ls[1];
+                if (r.contains("{")) {
+                    String[] arr = r.substring(1, r.length() - 1).split(",");
+                    int cnt = 0;
+                    for (String s : arr) {
+                        String aN = id.substring(0, id.length() - 2);
+                        String arrN = aN + "[" + cnt + "]";
+                        zone[where(i)].put(arrN, s);
+                        cnt++;
+                    }
+                    System.out.println(id+"→"+r);
+                } else {
+                    String res = to.alog(r, zone[where(i)]);
+                    zone[where(i)].put(id, res);
+                    System.out.println(id+"→"+res);
+                }
 
+            }
+            else if(line.contains("=") && !line.contains("int") &&!line.contains("for") && !line.contains("while")){
+                String[] lr = line.replace(" ","").split("=");
+                String des = lr[0];
+                String r = lr[1];
+                String res = to.alog(r,zone[where(i)]);
+                zone[where(i)].put(des,res);
             }
 
         }
@@ -188,6 +216,7 @@ public class Scan {
         sc.flitter();
         sc.findFunc();
         sc.analysis(0);
+        System.out.println((true)+"");
 
     }
 }

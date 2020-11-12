@@ -14,9 +14,9 @@ public class Tool {
             return false;
         }
         if(Pattern.matches(p,s)){
-            return Double.parseDouble(s);
+            return Integer.parseInt(s);
         }
-        return map.get(s);
+        return Integer.parseInt((String)map.get(s));
     }
     public void transValue(String s,String in,Map<String,Object> fmap,Map<String,Object> desmap){
         if(s.contains("[")){ //arr[]
@@ -34,25 +34,90 @@ public class Tool {
                 sb.append(",");
             }
             sb.append("}");
-            System.out.print("数组传参" + arrName+"[] = "+sb.toString()+"   ");
+            System.out.print("数组传参" + arrName+"[] → "+sb.toString()+"   ");
 
         }
         else{
-            Object x = value(in,fmap); //(len,6)
+            String x = value(in,fmap)+""; //(len,6)
             desmap.put(s,x);
-            System.out.print("普通传参"+s+"="+x.toString());
+            System.out.print("普通传参"+s+" →"+x.toString());
         }
     }
 
-    public int plus(){
-        return 0;
+    public String alog(String r,Map<String,Object> map){
+        String res = null;
+        String rs = r.replace(" ","").replace(";","");
+        if(r.contains("+")){
+            String[] ab = rs.split("[+]");
+            int a = (Integer)value(ab[0],map);
+            int b = (Integer)value(ab[1],map);
+            res = (a+b)+"";
+        }
+        else if(r.contains("-")){
+            String[] ab = rs.split("-");
+            int a = (Integer)value(ab[0],map);
+            int b = (Integer)value(ab[1],map);
+            res = (a-b)+"";
+        }
+        else if(r.contains("/")){
+            String[] ab = rs.split("/");
+            int a = (Integer)value(ab[0],map);
+            int b = (Integer)value(ab[1],map);
+            res = (a/b)+"";
+
+        }
+        else if(r.contains("*")){
+            String[] ab = rs.split("[*]");
+            int a = (Integer)value(ab[0],map);
+            int b = (Integer)value(ab[1],map);
+            res = (a*b)+"";
+
+        }
+        else if(r.contains("<")){
+            String[] ab = rs.split("<");
+            int a = (Integer)value(ab[0],map);
+            int b = (Integer)value(ab[1],map);
+            res = (a<b)+"";
+
+        }
+        else if(r.contains(">")){
+            String[] ab = rs.split(">");
+            int a = (Integer)value(ab[0],map);
+            int b = (Integer)value(ab[1],map);
+            res = (a>b)+"";
+
+        }
+        else if(r.contains("==")){
+            String[] ab = rs.split("==");
+            int a = (Integer)value(ab[0],map);
+            int b = (Integer)value(ab[1],map);
+            res = (a==b)+"";
+
+        }
+        else if(r.contains("&&")){
+            String[] ab = rs.split("&&");
+            boolean a = (Boolean) value(ab[0],map);
+            boolean b = (Boolean) value(ab[1],map);
+            res = (a && b)+"";
+
+        }
+        else if(r.contains("||")){
+            String[] ab = rs.split("\\|\\|");
+            boolean a = (Boolean) value(ab[0],map);
+            boolean b = (Boolean) value(ab[0],map);
+            res = (a||b)+"";
+        }
+        else{
+            res = value(rs,map).toString();
+        }
+        return res;
     }
 
     public static void main(String[] args) {
         JexlContext jc = new MapContext();
         jc.set("arr[0]", 1);
         jc.set("ans", new StringBuffer());
-        Expression e = new JexlEngine().createExpression("arr[0]=1;");
+        Expression e = new JexlEngine().createExpression("arr[1]=1+arr[0];");
         e.evaluate(jc);
         System.out.println(jc.get("arr[0"));
 //        System.out.println(jc.get("a")+" "+jc.get("b")+" "+jc.get("c"));

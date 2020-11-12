@@ -1,7 +1,8 @@
 int main(){
-	int arr = {9,2,5,3,7,101};
-	int a = 0;
-	int res = sublen(arr,6);
+	int arry[] = {9,2,5,3,7,101};
+	int b = 1;
+	int a = b*3;
+	int res = sublen(arry,6);
 	return 0;
 }
 int sublen(int arry[],int len){
