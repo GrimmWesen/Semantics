@@ -1,0 +1,31 @@
+int main(){
+	int arr[] = {9,2,5,3,7,101};
+	int res = sublen(arr,6);
+	a;
+	return 0;
+}
+int sublen(int arry[],int len){
+	if(len<2){
+		return len;
+	}
+	int res = 0;
+	int dp[len];
+	int i = 0;
+	while(i<len){
+		dp[i] = 1;
+		i++;
+	}
+	for(int i=1;i<len;i++){
+		for(int j=0;j<i;j++){
+			if(arry[j]<arry[i] && dp[j]+1>dp[i]){
+				dp[i] = dp[j]+1;
+			}
+		}
+		if(dp[i]>res){
+			res = dp[i];
+		}
+	}
+	return res;
+}
+void f(){
+}
