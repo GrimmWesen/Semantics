@@ -14,9 +14,10 @@ public class Scan {
     public int endIndex = -1;
 
 
-    public Map<String,Object>[] zone;  //每个域的变量
+    public Map<String,Object>[] zone = null;  //每个域的变量
 
     public Token t = new Token();
+    public Tool to = new Tool();
 
     public  void read(){
         try{
@@ -52,8 +53,7 @@ public class Scan {
 
     public  void findFunc(){
         int linenum = 0;
-//        List<Integer> list = new ArrayList<Integer>();
-        List<String> funclist = new ArrayList<String>(); // main#0  f#
+
         for(String str:linecode){
             if(str.equals("")){
                 linenum++;
@@ -75,18 +75,9 @@ public class Scan {
             linenum ++;
         }
 
-//        for(int i=0;i<list.size()-1;i++){
-//            int end = list.get(i+1)-1;
-//            int begin = list.get(i);
-//            String info = funclist.get(i)+"#"+begin+"_"+end;
-//            zoneInfo.add(info);
-//        }
-//        String last = funclist.get(list.size()-1)+"#"+list.get(list.size()-1)+"_"+linenum;
-//        zoneInfo.add(last);
-
-        zone = new Map[funclist.size()]; //几个函数几个域
-        for(Map m:zone){
-            m = new HashMap<String, Object>(); //初始化
+        zone = new Map[zoneInfo.size()]; //几个函数几个域
+        for (int i=0;i<zoneInfo.size();i++){
+            zone[i] = new HashMap<String, Object>();
         }
     }
     public int where(int i){
@@ -108,30 +99,95 @@ public class Scan {
         return res;
     }
 
-    public void analysis(int start,int back){
-        int zoneid  = where(start); //判断在哪个函数
-        Map<String,Object> map = zone[zoneid]; //找到对应函数的值的map
+    public int isFuncUse(int lineID){
+        String str = linecode[lineID];
+        for (String info:zoneInfo){
+            String funcName = info.split("#")[0];
+            if(str.contains(funcName) && str.contains("(") && str.contains(";") && !funcIndex.contains(lineID)){
+                return Integer.parseInt(info.split("#")[1]);
+            }
+        }
+        return -1;
+    }
+
+
+    public void analysis(int start){
+        Stack<String> stack = new Stack<String>();
+        stack.push("0_无");
+
         for(int i = start;;i++){
             String line = linecode[i];
-            if(i == endIndex) {
+            if(stack.size() == 0){
                 break;
             }
-            if(i!= endIndex && line.length()>5 && line.substring(0,6).equals("return")){
-                analysis(back+1,0);
+            else if(line.length()>5 && line.substring(0,6).equals("return")){  //return
+                String[] strs = stack.peek().split("_"); //"1_identy"
+                int zoneID = where(Integer.parseInt(strs[0])); //在哪个域被调用的
+                String identy = strs[1]; //在那个域的变量名称
+                if(!identy.equals("无")){  //需要返回值
+                    String str = line.split(" ")[1].replace(";","");//取字符
+                    Object res = to.value(str,zone[where(i)]); //取值
+                    zone[zoneID].put(identy,res);
+
+                    System.out.println("返回"+identy+" ="+res);
+                }
+                stack.pop();
+                i = Integer.parseInt(strs[0]); //回到调用处。由于+1 到下一行
+            }
+            else if(isFuncUse(i)!= -1){  //函数调用
+                if(line.contains("=")){
+                    String left = line.split("=")[0];
+                    String define = left.split(" ")[0]; //类型
+                    String identy = left.split(" ")[1]; // 变量名称
+                    stack.push(i+"_"+identy);
+                }
+                else{
+                    //f()  没有赋值
+                }
+
+                //参数复制
+                String argss = line.substring(line.indexOf("(")+1,line.indexOf(")")); //传了哪几个参数
+                String[] args = argss.split(",");//参数的列表（1,2,ab）
+
+                int tt = isFuncUse(i);//函数声明在哪行
+                int funcZone = where(tt); //调用的函数在哪个域
+                String funcline = linecode[tt]; //函数声明那行
+                String fargss = funcline.substring(funcline.indexOf("(")+1,funcline.indexOf(")")); //传了哪几个参数
+                String[] fargs = fargss.split(",");//参数的列表
+
+                for (int j = 0; j < fargs.length ; j++) {
+                    String can = fargs[j].split(" ")[1]; //arr[] \len
+                    to.transValue(can,args[j],zone[where(i)], zone[funcZone]);
+                }
+                System.out.println("\n");
+                i = tt; //-1确保加1后，到达函数声明界面。进行参数复制
+
+            }
+            else if(funcIndex.contains(i) && i!=0){ //函数
+//                String fargss = line.substring(line.indexOf("(")+1,line.indexOf(")")); //传了哪几个参数
+//                String[] fargs = fargss.split(",");//参数的列表
+//
+//                for (int j = 0; j < fargs.length ; j++) {
+//                    String can = fargs[j].split(" ")[1]; //arr[] \len
+//                    System.out.print(can+"传入");
+//                }
+            }
+            else if(line.contains("int") && !funcIndex.contains(i)){
+               String[] lr = line.split("=");
+
             }
 
         }
 
     }
 
+
     public static void main(String[] args) {
         Scan sc = new Scan();
         sc.read();
         sc.flitter();
         sc.findFunc();
-        for(Integer e:sc.funcIndex){
-            System.out.println(e);
-        }
-        System.out.println(sc.endIndex);
+        sc.analysis(0);
+
     }
 }

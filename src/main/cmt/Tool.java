@@ -18,6 +18,31 @@ public class Tool {
         }
         return map.get(s);
     }
+    public void transValue(String s,String in,Map<String,Object> fmap,Map<String,Object> desmap){
+        if(s.contains("[")){ //arr[]
+            String arrName = s.substring(0,s.indexOf("[")); //arr[10]  arr
+            StringBuffer sb = new StringBuffer("{");
+            for (int i=0;i<100;i++){
+                String ai = arrName+"["+i+"]";
+                if (!fmap.containsKey(ai)){
+                    break;
+                }
+                Object x = fmap.get(ai);
+                desmap.put(ai,x);
+
+                sb.append(x.toString());
+                sb.append(",");
+            }
+            sb.append("}");
+            System.out.print("数组传参" + arrName+"[] = "+sb.toString()+"   ");
+
+        }
+        else{
+            Object x = value(in,fmap); //(len,6)
+            desmap.put(s,x);
+            System.out.print("普通传参"+s+"="+x.toString());
+        }
+    }
 
     public int plus(){
         return 0;
