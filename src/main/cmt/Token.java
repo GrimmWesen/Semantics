@@ -25,6 +25,9 @@ public class Token {
         }
         return false;
     }
+    public boolean hasXun(String line){
+        return line.contains("for")  || line.contains("while");
+    }
 
     public static void main(String[] args) {
 

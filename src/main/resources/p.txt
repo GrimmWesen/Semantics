@@ -1,7 +1,17 @@
 int main(){
 	int arry[] = {9,2,5,3,7,101};
-	int b = 1;
-	int a = b*3;
+	int a = 0;
+	int b = 3;
+	while(a<3){
+	  a = a+1;
+	}
+	int c = a+b;
+	int d[3];
+	int i = 0;
+	if(i<3){
+	   dp[i] = i;
+	   i = i+1;
+	}
 	int res = sublen(arry,6);
 	return 0;
 }
@@ -13,12 +23,15 @@ int sublen(int arry[],int len){
 	int dp[len];
 	int i = 0;
 	while(i<len){
+		if(i>2){
 		dp[i] = 1;
-		i++;
+		}
+		i = i+1;
 	}
 	for(int i=1;i<len;i++){
 		for(int j=0;j<i;j++){
-			if(arry[j]<arry[i] && dp[j]+1>dp[i]){
+			int temp = dp[j]+1;
+			if(arry[j]<arry[i] && temp>dp[i]){
 				dp[i] = dp[j]+1;
 			}
 		}
@@ -27,6 +40,4 @@ int sublen(int arry[],int len){
 		}
 	}
 	return res;
-}
-void f(){
 }

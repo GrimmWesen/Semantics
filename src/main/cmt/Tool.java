@@ -16,7 +16,13 @@ public class Tool {
         if(Pattern.matches(p,s)){
             return Integer.parseInt(s);
         }
-        return Integer.parseInt((String)map.get(s));
+        String temp = (String)map.get(s);
+        if(temp.equals("true") || temp.equals("false")){
+            return Boolean.parseBoolean(temp);
+        }
+        else{
+            return Integer.parseInt((String)map.get(s));
+        }
     }
     public void transValue(String s,String in,Map<String,Object> fmap,Map<String,Object> desmap){
         if(s.contains("[")){ //arr[]
@@ -51,18 +57,21 @@ public class Tool {
             String[] ab = rs.split("[+]");
             int a = (Integer)value(ab[0],map);
             int b = (Integer)value(ab[1],map);
+            System.out.print("("+ab[0]+"="+a+","+ab[1]+"="+b+")→");
             res = (a+b)+"";
         }
         else if(r.contains("-")){
             String[] ab = rs.split("-");
             int a = (Integer)value(ab[0],map);
             int b = (Integer)value(ab[1],map);
+            System.out.print("("+ab[0]+"="+a+","+ab[1]+"="+b+")→");
             res = (a-b)+"";
         }
         else if(r.contains("/")){
             String[] ab = rs.split("/");
             int a = (Integer)value(ab[0],map);
             int b = (Integer)value(ab[1],map);
+            System.out.print("("+ab[0]+"="+a+","+ab[1]+"="+b+")→");
             res = (a/b)+"";
 
         }
@@ -70,6 +79,7 @@ public class Tool {
             String[] ab = rs.split("[*]");
             int a = (Integer)value(ab[0],map);
             int b = (Integer)value(ab[1],map);
+            System.out.print("("+ab[0]+"="+a+","+ab[1]+"="+b+")→");
             res = (a*b)+"";
 
         }
@@ -77,6 +87,7 @@ public class Tool {
             String[] ab = rs.split("<");
             int a = (Integer)value(ab[0],map);
             int b = (Integer)value(ab[1],map);
+            System.out.print("("+ab[0]+"="+a+","+ab[1]+"="+b+")→");
             res = (a<b)+"";
 
         }
@@ -84,6 +95,7 @@ public class Tool {
             String[] ab = rs.split(">");
             int a = (Integer)value(ab[0],map);
             int b = (Integer)value(ab[1],map);
+            System.out.print("("+ab[0]+"="+a+","+ab[1]+"="+b+")→");
             res = (a>b)+"";
 
         }
@@ -91,6 +103,7 @@ public class Tool {
             String[] ab = rs.split("==");
             int a = (Integer)value(ab[0],map);
             int b = (Integer)value(ab[1],map);
+            System.out.print("("+ab[0]+"="+a+","+ab[1]+"="+b+")→");
             res = (a==b)+"";
 
         }
@@ -98,6 +111,7 @@ public class Tool {
             String[] ab = rs.split("&&");
             boolean a = (Boolean) value(ab[0],map);
             boolean b = (Boolean) value(ab[1],map);
+            System.out.print("("+ab[0]+"="+a+","+ab[1]+"="+b+")→");
             res = (a && b)+"";
 
         }
@@ -105,12 +119,63 @@ public class Tool {
             String[] ab = rs.split("\\|\\|");
             boolean a = (Boolean) value(ab[0],map);
             boolean b = (Boolean) value(ab[0],map);
+            System.out.print("("+ab[0]+"="+a+","+ab[1]+"="+b+")→");
             res = (a||b)+"";
         }
         else{
             res = value(rs,map).toString();
+            System.out.print(";"+rs+" = "+res+" ");
         }
         return res;
+    }
+
+    public boolean judge(String cond,Map<String,Object> map){
+        boolean res = false;
+
+        if(cond.contains("||")){
+            String[] lr = cond.split("\\|\\|");
+            boolean l = Boolean.parseBoolean(alog(lr[0],map));
+            boolean r = Boolean.parseBoolean(alog(lr[1],map));
+            return l || r;
+        }
+        else if(cond.contains("&&")){
+            String[] lr = cond.split("&&");
+            boolean l = Boolean.parseBoolean(alog(lr[0],map));
+            boolean r = Boolean.parseBoolean(alog(lr[1],map));
+            return l && r;
+        }
+        else if(cond.contains("<")){
+            String[] lr = cond.split("<");
+            int l = Integer.parseInt(alog(lr[0],map));
+            int r = Integer.parseInt(alog(lr[1],map));
+            return l<r;
+        }
+        else if(cond.contains(">")){
+            String[] lr = cond.split(">");
+            int l = Integer.parseInt(alog(lr[0],map));
+            int r = Integer.parseInt(alog(lr[1],map));
+            return l>r;
+        }
+        else if(cond.contains("==")){
+            String[] lr = cond.split("==");
+            int l = Integer.parseInt(alog(lr[0],map));
+            int r = Integer.parseInt(alog(lr[1],map));
+            return l==r;
+        }
+        else{
+            return Boolean.parseBoolean(alog(cond,map));
+        }
+    }
+
+    public void setArr(String str,Map<String,Object> map){
+        String lens = str.substring(str.indexOf("[")+1,str.indexOf("]"));
+        int len = Integer.parseInt(lens);
+        String arrN = str.substring(0,str.indexOf("["));
+
+        for (int i=0;i<len;i++){
+            String id = arrN+"["+i+"]";
+            map.put(id,"0");
+        }
     }
 
     public static void main(String[] args) {

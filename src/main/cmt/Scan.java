@@ -2,6 +2,7 @@
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.sql.SQLOutput;
 import java.util.*;
 
 public class Scan {
@@ -113,6 +114,10 @@ public class Scan {
 
     public void analysis(int start){
         Stack<String> stack = new Stack<String>();
+//        Stack<Integer> stackif = new Stack<Integer>();
+        Stack<String> stackwhile = new Stack<String>();
+
+
         stack.push("0_无");
 
         for(int i = start;;i++){
@@ -121,6 +126,7 @@ public class Scan {
                 break;
             }
             else if(line.length()>5 && line.substring(0,6).equals("return")){  //return
+                System.out.print(line+"\t\t\t\t\t//");
                 String[] strs = stack.peek().split("_"); //"1_identy"
                 int zoneID = where(Integer.parseInt(strs[0])); //在哪个域被调用的
                 String identy = strs[1]; //在那个域的变量名称
@@ -135,7 +141,7 @@ public class Scan {
                 i = Integer.parseInt(strs[0]); //回到调用处。由于+1 到下一行
             }
             else if(isFuncUse(i)!= -1){  //函数调用
-                System.out.print(line+" //");
+                System.out.print(line+"\t\t\t\t\t//");
                 if(line.contains("=")){
                     String left = line.split("=")[0];
                     String define = left.split(" ")[0]; //类型
@@ -161,25 +167,24 @@ public class Scan {
                     to.transValue(can,args[j],zone[where(i)], zone[funcZone]);
                 }
                 System.out.println("\n");
-                i = tt; //-1确保加1后，到达函数声明界面。进行参数复制
+                i = tt-1; //-1确保加1后，到达函数声明界面。
 
             }
-            else if(funcIndex.contains(i) && i!=0){ //函数
-//                String fargss = line.substring(line.indexOf("(")+1,line.indexOf(")")); //传了哪几个参数
-//                String[] fargs = fargss.split(",");//参数的列表
-//
-//                for (int j = 0; j < fargs.length ; j++) {
-//                    String can = fargs[j].split(" ")[1]; //arr[] \len
-//                    System.out.print(can+"传入");
-//                }
+            else if(funcIndex.contains(i)){ //函数
+                System.out.println("###########################进入函数"+zoneInfo.get(where(i))+"###############################");
             }
-            else if(line.contains("int") && !funcIndex.contains(i)){ //声明变量并赋值
-                System.out.print(line+" ");
+            else if(line.contains("int") && !funcIndex.contains(i) && !t.hasXun(line)){ //声明变量并赋值
+                System.out.print(line+"\t\t\t\t\t//");
+                if (!line.contains("=")){
+                    System.out.println("声明未赋值");
+                    continue;
+                }
                 String[] lr = line.split("=");
                 String l = lr[0];
                 String r = lr[1].replace(" ", "").replace(";", "");
                 String[] ls = l.split(" ");
                 String id = ls[1];
+
                 if (r.contains("{")) {
                     String[] arr = r.substring(1, r.length() - 1).split(",");
                     int cnt = 0;
@@ -189,20 +194,95 @@ public class Scan {
                         zone[where(i)].put(arrN, s);
                         cnt++;
                     }
-                    System.out.println(id+"→"+r);
-                } else {
+                    System.out.println(id+"="+r);
+                }
+                else {
                     String res = to.alog(r, zone[where(i)]);
                     zone[where(i)].put(id, res);
-                    System.out.println(id+"→"+res);
+                    System.out.println(id+"="+res);
                 }
 
             }
-            else if(line.contains("=") && !line.contains("int") &&!line.contains("for") && !line.contains("while")){
+            else if(line.contains("=") && !line.contains("int") &&!t.hasXun(line)){
+                System.out.print(line +"\t\t\t\t\t//");
                 String[] lr = line.replace(" ","").split("=");
                 String des = lr[0];
                 String r = lr[1];
                 String res = to.alog(r,zone[where(i)]);
                 zone[where(i)].put(des,res);
+                System.out.println(des+"="+res);
+            }
+            else if(line.contains("if")){
+                //寻找结束}
+                System.out.print (line +"\t\t\t\t\t//");
+                Stack<Integer> sif = new Stack<Integer>();
+                sif.push(1);
+                int be = i;
+                while (sif.size()!=0){
+                    be++;
+                    String line_in_if = linecode[be];
+                    if(line_in_if.contains("{")){
+                        sif.push(1);
+                    }
+                    if(line_in_if.contains("}")){
+                        sif.pop();
+                    }
+                }
+                int endIFindex = be;
+                String condition = line.substring(line.indexOf("if")+3,line.indexOf("{")-1); //括号里的条件
+                boolean conRes = to.judge(condition,zone[where(i)]);
+                System.out.println(condition +" =" +conRes);
+
+                if(!conRes){
+                    i = endIFindex;
+                }
+            }
+            else if(line.contains("while")){
+                //寻找结束}
+                System.out.print (line +"\t\t\t\t\t//");
+                Stack<Integer> sWhi = new Stack<Integer>();
+                sWhi.push(1);
+                int be = i;
+                while (sWhi.size()!=0){
+                    be++;
+                    String line_in_while = linecode[be];
+                    if(line_in_while.contains("{")){
+                        sWhi.push(1);
+                    }
+                    if(line_in_while.contains("}")){
+                        sWhi.pop();
+                    }
+                }
+                int endIFindex = be;
+                stackwhile.push(i+"_"+endIFindex);
+                String condition = line.substring(line.indexOf("while")+6,line.indexOf("{")-1); //括号里的条件
+                boolean conRes = to.judge(condition,zone[where(i)]);
+                System.out.println(condition +" =" +conRes);
+
+                if(!conRes){
+                    stackwhile.pop();
+                    i = endIFindex;
+                }
+            }
+            else if(line.contains("for")){
+
+            }
+            else if(line.charAt(0) == '}'){
+                System.out.println(line+"\t\t\t\t\t//");
+//                if(stackif.size()!=0){
+//                    i = stackif.pop()-1;
+//                }
+                if (stackwhile.size()==0){
+                    continue;
+                }
+                String info = stackwhile.peek();
+                String[] infos = info.split("_");
+                int from = Integer.parseInt(infos[0]);
+                int end = Integer.parseInt(infos[1]);
+                if(i == end && stackwhile.size()!=0){
+                    stackwhile.pop();
+                    i =from-1;
+                }
             }
 
         }
@@ -216,7 +296,9 @@ public class Scan {
         sc.flitter();
         sc.findFunc();
         sc.analysis(0);
-        System.out.println((true)+"");
+//        String id = "dp[10]";
+//        String lens = id.substring(id.indexOf("[")+1,id.indexOf("]"));
+//        System.out.println(lens);
 
     }
 }
