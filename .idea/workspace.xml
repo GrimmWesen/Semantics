@@ -5,14 +5,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="92d46006-e750-42ba-a41d-923d76f1ff20" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/resources/code.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/cmt/Scan.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/cmt/Scan.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/cmt/Token.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/cmt/Token.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/cmt/Tool.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/cmt/Tool.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/code.txt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/code.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/p.txt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/p.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/Scan.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/Scan.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/Token.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/Token.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/Tool.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/Tool.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/p.txt" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/p.txt" afterDir="false" />
     </list>
@@ -52,6 +50,7 @@
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
+    <property name="nodejs_package_manager_path" value="npm" />
     <property name="project.structure.last.edited" value="Modules" />
     <property name="project.structure.proportion" value="0.15" />
     <property name="project.structure.side.proportion" value="0.2" />
@@ -124,7 +123,7 @@
       <workItem from="1605144496243" duration="13338000" />
       <workItem from="1605178776279" duration="581000" />
       <workItem from="1605179369298" duration="16274000" />
-      <workItem from="1605238224765" duration="13847000" />
+      <workItem from="1605238224765" duration="26913000" />
     </task>
     <task id="LOCAL-00001" summary="22:00">
       <created>1605190153468</created>
@@ -140,7 +139,14 @@
       <option name="project" value="LOCAL" />
       <updated>1605195600821</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="17:00">
+      <created>1605258971204</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1605258971204</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -149,7 +155,8 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="22:00" />
     <MESSAGE value="23:00" />
-    <option name="LAST_COMMIT_MESSAGE" value="23:00" />
+    <MESSAGE value="17:00" />
+    <option name="LAST_COMMIT_MESSAGE" value="17:00" />
   </component>
   <component name="WindowStateProjectService">
     <state x="410" y="159" width="1099" height="881" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1605179255932">
@@ -160,46 +167,46 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="623" y="289" key="#com.intellij.ide.util.TreeClassChooserDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1605179050075" />
-    <state x="481" y="12" key="CommitChangelistDialog2" timestamp="1605195600545">
+    <state x="481" y="12" key="CommitChangelistDialog2" timestamp="1605258970829">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="481" y="12" key="CommitChangelistDialog2/0.0.1920.1040@0.0.1920.1040" timestamp="1605195600545" />
+    <state x="481" y="12" key="CommitChangelistDialog2/0.0.1920.1040@0.0.1920.1040" timestamp="1605258970829" />
     <state x="687" y="199" key="FileChooserDialogImpl" timestamp="1605179405667">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="687" y="199" key="FileChooserDialogImpl/0.0.1920.1040@0.0.1920.1040" timestamp="1605179405667" />
-    <state width="1867" height="353" key="GridCell.Tab.0.bottom" timestamp="1605258710878">
+    <state width="1867" height="389" key="GridCell.Tab.0.bottom" timestamp="1605274727877">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1867" height="353" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1605258710878" />
-    <state width="1867" height="353" key="GridCell.Tab.0.center" timestamp="1605258710878">
+    <state width="1867" height="389" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1605274727877" />
+    <state width="1867" height="389" key="GridCell.Tab.0.center" timestamp="1605274727877">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1867" height="353" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1605258710878" />
-    <state width="1867" height="353" key="GridCell.Tab.0.left" timestamp="1605258710878">
+    <state width="1867" height="389" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1605274727877" />
+    <state width="1867" height="389" key="GridCell.Tab.0.left" timestamp="1605274727877">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1867" height="353" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1605258710878" />
-    <state width="1867" height="353" key="GridCell.Tab.0.right" timestamp="1605258710878">
+    <state width="1867" height="389" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1605274727877" />
+    <state width="1867" height="389" key="GridCell.Tab.0.right" timestamp="1605274727877">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1867" height="353" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1605258710878" />
-    <state width="1867" height="254" key="GridCell.Tab.1.bottom" timestamp="1605258235862">
+    <state width="1867" height="389" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1605274727877" />
+    <state width="1867" height="389" key="GridCell.Tab.1.bottom" timestamp="1605274727877">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1867" height="254" key="GridCell.Tab.1.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1605258235862" />
-    <state width="1867" height="254" key="GridCell.Tab.1.center" timestamp="1605258235862">
+    <state width="1867" height="389" key="GridCell.Tab.1.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1605274727877" />
+    <state width="1867" height="389" key="GridCell.Tab.1.center" timestamp="1605274727877">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1867" height="254" key="GridCell.Tab.1.center/0.0.1920.1040@0.0.1920.1040" timestamp="1605258235862" />
-    <state width="1867" height="254" key="GridCell.Tab.1.left" timestamp="1605258235862">
+    <state width="1867" height="389" key="GridCell.Tab.1.center/0.0.1920.1040@0.0.1920.1040" timestamp="1605274727877" />
+    <state width="1867" height="389" key="GridCell.Tab.1.left" timestamp="1605274727877">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1867" height="254" key="GridCell.Tab.1.left/0.0.1920.1040@0.0.1920.1040" timestamp="1605258235862" />
-    <state width="1867" height="254" key="GridCell.Tab.1.right" timestamp="1605258235862">
+    <state width="1867" height="389" key="GridCell.Tab.1.left/0.0.1920.1040@0.0.1920.1040" timestamp="1605274727877" />
+    <state width="1867" height="389" key="GridCell.Tab.1.right" timestamp="1605274727877">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1867" height="254" key="GridCell.Tab.1.right/0.0.1920.1040@0.0.1920.1040" timestamp="1605258235862" />
+    <state width="1867" height="389" key="GridCell.Tab.1.right/0.0.1920.1040@0.0.1920.1040" timestamp="1605274727877" />
     <state x="312" y="0" key="SettingsEditor" timestamp="1605179409461">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
@@ -208,9 +215,25 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="452" y="188" key="Vcs.Push.Dialog.v2/0.0.1920.1040@0.0.1920.1040" timestamp="1605195612170" />
-    <state x="532" y="237" key="run.anything.popup" timestamp="1605256051293">
+    <state x="532" y="237" key="run.anything.popup" timestamp="1605274721596">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="532" y="237" key="run.anything.popup/0.0.1920.1040@0.0.1920.1040" timestamp="1605256051293" />
+    <state x="532" y="237" key="run.anything.popup/0.0.1920.1040@0.0.1920.1040" timestamp="1605274721596" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/cmt/Scan.java</url>
+          <line>378</line>
+          <option name="timeStamp" value="24" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/cmt/Scan.java</url>
+          <line>137</line>
+          <option name="timeStamp" value="26" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>

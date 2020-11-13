@@ -1,43 +1,24 @@
 int main(){
-	int arry[] = {9,2,5,3,7,101};
-	int a = 0;
-	int b = 3;
-	while(a<3){
-	  a = a+1;
+	int arry[] = {-1,2,3,4,5};
+	if(arry[0] == -1){
+	  arry[0]=1;
 	}
-	int c = a+b;
-	int d[3];
-	int i = 0;
-	if(i<3){
-	   dp[i] = i;
-	   i = i+1;
-	}
-	int res = sublen(arry,6);
+	int x = 0;
+	for(int i=0;i<2;i++){
+    for(int j=0;j<3;j++){
+    x = x+1;
+    }
+    }
+	x = x+0;
+	int res = sum(arry,5);
 	return 0;
 }
-int sublen(int arry[],int len){
-	if(len<2){
-		return len;
-	}
-	int res = 0;
-	int dp[len];
+int sum(int arry[],int len){
 	int i = 0;
+	int res = 0;
 	while(i<len){
-		if(i>2){
-		dp[i] = 1;
-		}
-		i = i+1;
-	}
-	for(int i=1;i<len;i++){
-		for(int j=0;j<i;j++){
-			int temp = dp[j]+1;
-			if(arry[j]<arry[i] && temp>dp[i]){
-				dp[i] = dp[j]+1;
-			}
-		}
-		if(dp[i]>res){
-			res = dp[i];
-		}
+	res = res+arry[i];
+	i = i+1;
 	}
 	return res;
 }

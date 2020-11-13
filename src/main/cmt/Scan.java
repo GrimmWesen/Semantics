@@ -22,7 +22,7 @@ public class Scan {
 
     public  void read(){
         try{
-            String sourceAddr = "./src/main/resources/p.txt";
+            String sourceAddr = "./src/main/resources/code.txt";
             File file  = new File(sourceAddr);
             FileReader fr = new FileReader(file);
             int length = (int) file.length();//字节数既是字符数 ，因为char大小一个字节
@@ -50,6 +50,7 @@ public class Scan {
         String s = new String(done);
         s = s.trim();
         linecode = s.split("\n"); //按行分割字符串
+
     }
 
     public  void findFunc(){
@@ -110,12 +111,20 @@ public class Scan {
         }
         return -1;
     }
+    public boolean isSingle(String line){
+        String copy = new String(line);
+        String noemp = copy.replace(" ","");
+        if(noemp.length()==1 && noemp.equals("}")){
+            return true;
+        }
+        return false;
+    }
 
 
     public void analysis(int start){
         Stack<String> stack = new Stack<String>();
-//        Stack<Integer> stackif = new Stack<Integer>();
         Stack<String> stackwhile = new Stack<String>();
+        Stack<String> stackFor = new Stack<String>();
 
 
         stack.push("0_无");
@@ -125,19 +134,20 @@ public class Scan {
             if(stack.size() == 0){
                 break;
             }
-            else if(line.length()>5 && line.substring(0,6).equals("return")){  //return
+            else if(line.length()>5 && line.contains("return")){  //return
                 System.out.print(line+"\t\t\t\t\t//");
                 String[] strs = stack.peek().split("_"); //"1_identy"
                 int zoneID = where(Integer.parseInt(strs[0])); //在哪个域被调用的
                 String identy = strs[1]; //在那个域的变量名称
                 if(!identy.equals("无")){  //需要返回值
-                    String str = line.split(" ")[1].replace(";","");//取字符
+                    String str = line.trim().split(" ")[1].replace(";","");//取字符
                     Object res = to.value(str,zone[where(i)]).toString(); //取值
                     zone[zoneID].put(identy,res);
 
                     System.out.println("返回"+identy+" ="+res);
                 }
                 stack.pop();
+                if(stack.size() == 0){break;}
                 i = Integer.parseInt(strs[0]); //回到调用处。由于+1 到下一行
             }
             else if(isFuncUse(i)!= -1){  //函数调用
@@ -179,7 +189,7 @@ public class Scan {
                     System.out.println("声明未赋值");
                     continue;
                 }
-                String[] lr = line.split("=");
+                String[] lr = line.trim().split("=");
                 String l = lr[0];
                 String r = lr[1].replace(" ", "").replace(";", "");
                 String[] ls = l.split(" ");
@@ -203,11 +213,17 @@ public class Scan {
                 }
 
             }
-            else if(line.contains("=") && !line.contains("int") &&!t.hasXun(line)){
+            else if(!line.contains("==")&&line.contains("=") &&!line.contains("int") &&!t.hasXun(line)){
                 System.out.print(line +"\t\t\t\t\t//");
                 String[] lr = line.replace(" ","").split("=");
                 String des = lr[0];
                 String r = lr[1];
+                if(des.contains("[")){ //b[i]
+                    String istr = des.substring(des.indexOf("[")+1,des.indexOf("]"));
+                    String aName = des.substring(0,des.indexOf("["));
+                    String inum = to.value(istr,zone[where(i)]).toString();
+                    des = aName+"["+inum+"]";
+                }
                 String res = to.alog(r,zone[where(i)]);
                 zone[where(i)].put(des,res);
                 System.out.println(des+"="+res);
@@ -231,7 +247,7 @@ public class Scan {
                 int endIFindex = be;
                 String condition = line.substring(line.indexOf("if")+3,line.indexOf("{")-1); //括号里的条件
                 boolean conRes = to.judge(condition,zone[where(i)]);
-                System.out.println(condition +" =" +conRes);
+                System.out.println("---→("+condition +") =" +conRes);
 
                 if(!conRes){
                     i = endIFindex;
@@ -257,7 +273,7 @@ public class Scan {
                 stackwhile.push(i+"_"+endIFindex);
                 String condition = line.substring(line.indexOf("while")+6,line.indexOf("{")-1); //括号里的条件
                 boolean conRes = to.judge(condition,zone[where(i)]);
-                System.out.println(condition +" =" +conRes);
+                System.out.println("---→"+condition +" =" +conRes);
 
                 if(!conRes){
                     stackwhile.pop();
@@ -265,24 +281,89 @@ public class Scan {
                 }
             }
             else if(line.contains("for")){
+                System.out.print (line +"\t\t\t\t\t//");
+                int be = i;
+                int endIFindex = -1;
+                boolean flag = false;
+                if(stackFor.size()==0){ //没有过 for
+                    flag = true;
+                }
+                else{ //有了是外层的for
+                    String[] str = stackFor.peek().split("_");
+                    if(Integer.parseInt(str[0]) != i){
+                        flag = true;
+                    }
+                }
+                if(flag){
+                    Stack<Integer> sstemp = new Stack<Integer>();
+                    sstemp.push(1);
+                    while (sstemp.size() != 0) {
+                        be++;
+                        String line_in_while = linecode[be];
+                        if (line_in_while.contains("{")) {
+                            sstemp.push(1);
+                        }
+                        if (line_in_while.contains("}")) {
+                            sstemp.pop();
+                        }
+                    }
+                    endIFindex = be;
+                    stackFor.push(i + "_" + endIFindex);
+                }
+
+                String[] three = line.substring(line.indexOf("(")+1,line.lastIndexOf(")")).split(";");
+                String ini = three[0];
+                String condi = three[1];
+                String move = three[2];
+
+
+                if(flag){ //c初始int i =0;
+                    String id = ini.split("=")[0].split(" ")[1];
+                    String val = ini.substring(ini.indexOf("=")+1);
+                    zone[where(i)].put(id,val);
+                    System.out.print("赋值："+ini+"; 条件: (");
+                }
+                else {
+                    String moveid = move.substring(0,move.length()-2);
+                    String moveres = to.alog(move,zone[where(i)]);
+                    zone[where(i)].put(moveid,moveres);
+                }
+                boolean condiRes = to.judge(condi,zone[where(i)]);
+                System.out.println(")---→"+condiRes);
+                if(!condiRes){
+                    String s= stackFor.pop();
+                    int end = Integer.parseInt(s.split("_")[1]);
+                    i = end;
+                }
+
 
             }
-            else if(line.charAt(0) == '}'){
+            else if(isSingle(line)){
                 System.out.println(line+"\t\t\t\t\t//");
 //                if(stackif.size()!=0){
 //                    i = stackif.pop()-1;
 //                }
-                if (stackwhile.size()==0){
-                    continue;
+               if(stackwhile.size()!=0){
+                    String info = stackwhile.peek();
+                    String[] infos = info.split("_");
+                    int from = Integer.parseInt(infos[0]);
+                    int end = Integer.parseInt(infos[1]);
+                    if(i == end && stackwhile.size()!=0){
+                        stackwhile.pop();
+                        i =from-1;
+                    }
                 }
-                String info = stackwhile.peek();
-                String[] infos = info.split("_");
-                int from = Integer.parseInt(infos[0]);
-                int end = Integer.parseInt(infos[1]);
-                if(i == end && stackwhile.size()!=0){
-                    stackwhile.pop();
-                    i =from-1;
-                }
+                if (stackFor.size()!=0){
+                   String info = stackFor.peek();
+                   String[] infos = info.split("_");
+                   int from = Integer.parseInt(infos[0]);
+                   int end = Integer.parseInt(infos[1]);
+                   if(i == end && stackFor.size()!=0){
+//                       stackFor.pop();
+                       i =from-1;
+                   }
+               }
+
             }
 
         }
@@ -296,9 +377,6 @@ public class Scan {
         sc.flitter();
         sc.findFunc();
         sc.analysis(0);
-//        String id = "dp[10]";
-//        String lens = id.substring(id.indexOf("[")+1,id.indexOf("]"));
-//        System.out.println(lens);
 
     }
 }

@@ -16,6 +16,13 @@ public class Tool {
         if(Pattern.matches(p,s)){
             return Integer.parseInt(s);
         }
+        if(s.contains("[")){ //a[i]
+            String iStr = s.substring(s.indexOf("[")+1,s.indexOf("]"));
+            String name = s.substring(0,s.indexOf("["));
+            String i = value(iStr,map).toString();
+            String id = name+"["+i+"]";
+            return Integer.parseInt((String)map.get(id));
+        }
         String temp = (String)map.get(s);
         if(temp.equals("true") || temp.equals("false")){
             return Boolean.parseBoolean(temp);
@@ -53,14 +60,14 @@ public class Tool {
     public String alog(String r,Map<String,Object> map){
         String res = null;
         String rs = r.replace(" ","").replace(";","");
-        if(r.contains("+")){
+        if(r.contains("+") && !r.contains("++")){
             String[] ab = rs.split("[+]");
             int a = (Integer)value(ab[0],map);
             int b = (Integer)value(ab[1],map);
             System.out.print("("+ab[0]+"="+a+","+ab[1]+"="+b+")→");
             res = (a+b)+"";
         }
-        else if(r.contains("-")){
+        else if((rs.charAt(0)!='-')&& r.contains("-") && !r.contains("--")){
             String[] ab = rs.split("-");
             int a = (Integer)value(ab[0],map);
             int b = (Integer)value(ab[1],map);
@@ -106,6 +113,13 @@ public class Tool {
             System.out.print("("+ab[0]+"="+a+","+ab[1]+"="+b+")→");
             res = (a==b)+"";
 
+        }
+        else if(r.contains("++")){
+            String id = r.substring(0,r.indexOf("+"));
+            int a = (Integer)value(id,map);
+            a = a+1;
+            System.out.print("("+id+"="+a+")");
+            res = a+"";
         }
         else if(r.contains("&&")){
             String[] ab = rs.split("&&");
